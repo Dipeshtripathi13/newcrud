@@ -17,7 +17,7 @@ namespace newcrud
 
             Map(x => x.city);
 
-            Table("Model");
+            Table("detail");
 
         }
     }

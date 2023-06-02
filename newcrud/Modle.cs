@@ -7,8 +7,8 @@ namespace newcrud
 {
     public class Modle
     {
-        public int pid { get; set; }
-        public string pname { get; set; }
-        public string city { get; set; }
+        public virtual int pid { get; set; }
+        public virtual string pname { get; set; }
+        public virtual string city { get; set; }
     }
 }
