@@ -16,7 +16,7 @@ namespace newcrud
         {
             if (!IsPostBack)
             {
-                lblMessage.Text = "Hello, World! This is the default page.";
+                lblMessage.Text = " This is the details page.";
                 BindRadGrid();
             }
 
@@ -120,40 +120,8 @@ namespace newcrud
             BindRadGrid();
         }
 
-        protected void RadGrid1_ItemCommand(object sender, GridCommandEventArgs e)
-        {
-            if (e.CommandName == "Delete" && e.Item is GridDataItem)
-            {
-                GridDataItem dataItem = (GridDataItem)e.Item;
-                int pid = Convert.ToInt32(dataItem.GetDataKeyValue("pid"));
+      
 
-                // Perform delete operation using the pid
-                DeleteRow(pid);
-
-                RadGrid1.Rebind(); // Rebind the RadGrid after deletion
-            }
-            else if (e.CommandName == "Edit" && e.Item is GridEditableItem)
-            {
-                GridEditableItem editedItem = (GridEditableItem)e.Item;
-                int pid = Convert.ToInt32(editedItem.GetDataKeyValue("pid"));
-
-                // Get the edited values from the edited item
-                TextBox txtPnameEdit = (TextBox)editedItem.FindControl("txtPnameEdit");
-                TextBox txtCityEdit = (TextBox)editedItem.FindControl("txtCityEdit");
-
-                string editedPname = txtPnameEdit.Text;
-                string editedCity = txtCityEdit.Text;
-
-                // Perform the update operation using the pid and the edited values
-                UpdateRow(pid, editedPname, editedCity);
-
-                RadGrid1.EditIndexes.Clear(); // Clear the edit indexes
-                RadGrid1.Rebind(); // Rebind the RadGrid after updating
-
-                // Optionally, you can show a success message or perform any additional actions
-                lblMessage.Text = "Row updated successfully!";
-            }
-        }
         private void DeleteRow(int pid)
         {
             using (ISession session = FluentNHibernateHelper.OpenSession())
@@ -172,24 +140,34 @@ namespace newcrud
 
        
 
-        private void UpdateRow(int pid, string editedPname, string editedCity)
-        {
-            using (ISession session = FluentNHibernateHelper.OpenSession())
-            {
-                Modle model = session.Get<Modle>(pid);
-                if (model != null)
-                {
-                    model.pname = editedPname;
-                    model.city = editedCity;
+        
 
-                    using (ITransaction transaction = session.BeginTransaction())
+        protected void RadGrid1_UpdateCommand(object sender, GridCommandEventArgs e)
+        {
+            UpdateRows(e.Item as GridEditableItem);
+        }
+
+        public static void UpdateRows(GridEditableItem item)
+        {
+            var employeeId = (int)item.GetDataKeyValue("pid");
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    var employee = session.Get<Modle>(employeeId);
+                    if (employee != null)
                     {
-                        session.Update(model);
+                        employee.pname = (item["pname"].Controls[0] as TextBox).Text;
+                        employee.city = (item["city"].Controls[0] as TextBox).Text;
+                        session.Update(employee);
                         transaction.Commit();
                     }
                 }
             }
         }
+
+
+
 
 
 
