@@ -11,7 +11,7 @@
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
 
         <div>
-            <h1>Person Details</h1>
+            <h1>Person Detail</h1>
             <asp:Label ID="lblMessage" runat="server" Text=""></asp:Label>
 
             <div>
