@@ -74,7 +74,11 @@ namespace newcrud
         //                transaction.Commit();
         //            }
         //        }
-
+        /// <summary>
+        /// ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         //        BindRadGrid();
         //        ClearInputFields();
         //    }
